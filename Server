@@ -1,0 +1,40 @@
+import socket
+import threading
+
+def arquivo():
+    cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        cliente.connect(('localhost', 9191))
+    except:
+
+        return print('Algo falhou, tente novamente!')
+
+    user = input('Usuario:   ')
+    print("\n >> Usuario conectado")
+
+    thread9191 = threading.Thread(target=Recmsg, args={cliente})
+    thread9292 = threading.Thread(target=Enviandomsg, args={cliente, user})
+
+def Recmsg(cliente):
+    while 1:
+        try:
+            msg = cliente.recv(1024).decode('utf-8')
+            print(msg+'\n')
+        except:
+            print('Possível erro de tentativa de conexao \n')
+            print('Pressione a tecla <Enter> para continuar..')
+            cliente.close()
+            break
+
+def Enviandomsg(cliente, user):
+    while 1:
+        try:
+            msg = input('\n')
+            cliente.send(f'{user} {msg}'.encode('utf-8'))
+        except:
+            print('>> Cliente desconectado!')
+            return
+
+
+
+
